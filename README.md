@@ -41,20 +41,19 @@
 		// 销毁缓存时，会执行用户自定义的销毁方法，如果不需要销毁其他项，该方法可以为空
 	}
 
-	
 	// 创建缓存，使用默认配置
 	craw := NewCraw("mytest1", new(benchCraw))
 	// 使用完后销毁缓存
 	defer craw.Destroy()
 	
 	// 设置缓存数据 key:"name",value:"Lily", 过期时间-1，不过期
-	handler.SetCraw("name","Lily", -1)
+	craw.SetCraw("name","Lily", -1)
 	
 	// 获取缓存数据
-	handler.GetData("name")
+	craw.GetData("name")
 	
 	// 获取缓存数据命中率
-	handler.HitRate()
+	craw.HitRate()
 	
 ```	
 
@@ -67,12 +66,12 @@ func NewCraw(crawName string, dispose CrawInterface, config ...string) *Craw
 // config格式
 {
 	"low": 858993459, 	// 缓存压缩最低阈值限制，默认为800 MB
-	"high": 1073741824, // 缓存触发清理最高阈值，默认为1 GB，当缓存数据大于1G时，开始清理，详见LruCache说明
+	"high": 1073741824, // 缓存触发清理最高阈值，默认为1 GB，当缓存数据大于1G时，开始清理，详见LruCache说明
 	"interval": 3600    // 缓存有效数据检查间隔，默认为1天
 }
 
 // 销毁craw
-func (dc *Craw) Destroy() 
+func (dc *Craw) Destroy()
 
 // 获取缓存数据，如果不存在则从远端获取数据并更新到craw然后返回
 //
@@ -85,7 +84,7 @@ func (dc *Craw) GetData(key string) (interface{}, error)
 // 参数 key:要查找的远端数据的key
 // 返回值 interface{}:更新到craw的数据
 // 返回值 成功为nil
-func (dc *Craw) UpdateData(key string) (data interface{}, err error) 
+func (dc *Craw) UpdateData(key string) (data interface{}, err error)
 
 // 删除craw缓存数据
 //
@@ -128,8 +127,8 @@ func (dc *Craw) IsExist(key string) (bool, error)
 
 ## 4. 性能测试
 
-针对当前设计的二级缓存进行精简的K-V读写压力测试
-测试分为1W，5W,10W,50W,100W,200W，
+针对当前设计的二级缓存进行精简的K-V读写压力测试
+测试分为1W，5W,10W,50W,100W,200W，
 分别设置命中率为0%,10%,30%,50%,70%,100%进行读写测试，
 然后统计总用时，每条读写耗时，每秒读写条数
 
